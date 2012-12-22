@@ -144,7 +144,7 @@ public final class CraftServer implements Server {
     private final SimpleHelpMap helpMap = new SimpleHelpMap(this);
     private final StandardMessenger messenger = new StandardMessenger();
     private final PluginManager pluginManager = new SimplePluginManager(this, commandMap);
-    protected final MinecraftServer console;
+    public final MinecraftServer console; // Almura protected -> public
     protected final DedicatedPlayerList playerList;
     private final Map<String, World> worlds = new LinkedHashMap<String, World>();
     private YamlConfiguration configuration;
