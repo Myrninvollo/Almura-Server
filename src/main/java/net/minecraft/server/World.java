@@ -13,6 +13,7 @@ import java.util.concurrent.Callable;
 // CraftBukkit start
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.util.LongHashSet;
+import org.bukkit.craftbukkit.SpigotTimings; // Spigot
 import org.bukkit.craftbukkit.util.UnsafeList;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.craftbukkit.CraftServer;
@@ -123,6 +124,8 @@ public abstract class World implements IBlockAccess {
     final Object chunkLock = new Object();
     public final org.spigotmc.SpigotWorldConfig spigotConfig; // Spigot
 
+    public final SpigotTimings.WorldTimingsHandler timings; // Spigot
+
     public CraftWorld getWorld() {
         return this.world;
     }
@@ -200,6 +203,7 @@ public abstract class World implements IBlockAccess {
         this.a();
 
         this.getServer().addWorld(this.world); // CraftBukkit
+        timings = new SpigotTimings.WorldTimingsHandler(this); // Spigot
     }
 
     protected abstract IChunkProvider j();
@@ -1272,6 +1276,7 @@ public abstract class World implements IBlockAccess {
         this.f.clear();
         this.methodProfiler.c("regular");
 
+        timings.entityTick.startTiming(); // Spigot
         for (i = 0; i < this.entityList.size(); ++i) {
             entity = (Entity) this.entityList.get(i);
 
@@ -1294,7 +1299,9 @@ public abstract class World implements IBlockAccess {
             this.methodProfiler.a("tick");
             if (!entity.dead) {
                 try {
+                    SpigotTimings.tickEntityTimer.startTiming(); // Spigot
                     this.playerJoinedWorld(entity);
+                    SpigotTimings.tickEntityTimer.stopTiming(); // Spigot
                 } catch (Throwable throwable1) {
                     crashreport = CrashReport.a(throwable1, "Ticking entity");
                     crashreportsystemdetails = crashreport.a("Entity being ticked");
@@ -1319,7 +1326,9 @@ public abstract class World implements IBlockAccess {
             this.methodProfiler.b();
         }
 
+        timings.entityTick.stopTiming(); // Spigot
         this.methodProfiler.c("tileEntities");
+        timings.tileEntityTick.startTiming(); // Spigot
         this.N = true;
         Iterator iterator = this.tileEntityList.iterator();
 
@@ -1334,8 +1343,11 @@ public abstract class World implements IBlockAccess {
 
             if (!tileentity.r() && tileentity.o() && this.isLoaded(tileentity.x, tileentity.y, tileentity.z)) {
                 try {
+                    tileentity.tickTimer.startTiming(); // Spigot
                     tileentity.h();
+                    tileentity.tickTimer.stopTiming(); // Spigot
                 } catch (Throwable throwable2) {
+                    tileentity.tickTimer.stopTiming(); // Spigot
                     crashreport = CrashReport.a(throwable2, "Ticking tile entity");
                     crashreportsystemdetails = crashreport.a("Tile entity being ticked");
                     tileentity.a(crashreportsystemdetails);
@@ -1355,6 +1367,8 @@ public abstract class World implements IBlockAccess {
             }
         }
 
+        timings.tileEntityTick.stopTiming(); // Spigot
+        timings.tileEntityPending.startTiming(); // Spigot
         this.N = false;
         if (!this.b.isEmpty()) {
             this.tileEntityList.removeAll(this.b);
@@ -1393,6 +1407,7 @@ public abstract class World implements IBlockAccess {
             this.a.clear();
         }
 
+        timings.tileEntityPending.stopTiming(); // Spigot
         this.methodProfiler.b();
         this.methodProfiler.b();
     }
@@ -1415,6 +1430,7 @@ public abstract class World implements IBlockAccess {
         byte b0 = 32;
 
         if (!flag || this.e(i - b0, 0, j - b0, i + b0, 0, j + b0)) {
+            entity.tickTimer.startTiming(); // Spigot
             entity.U = entity.locX;
             entity.V = entity.locY;
             entity.W = entity.locZ;
@@ -1476,6 +1492,7 @@ public abstract class World implements IBlockAccess {
                     entity.passenger = null;
                 }
             }
+            entity.tickTimer.stopTiming(); // Spigot
         }
     }
 

@@ -14,6 +14,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Vehicle;
+import org.spigotmc.CustomTimingsHandler; // Spigot
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.painting.PaintingBreakByEntityEvent;
 import org.bukkit.event.vehicle.VehicleBlockCollisionEvent;
@@ -109,6 +110,8 @@ public abstract class Entity {
     public UUID uniqueID; // CraftBukkit - private -> public
     public EnumEntitySize at;
     public boolean valid; // CraftBukkit
+
+    public CustomTimingsHandler tickTimer = org.bukkit.craftbukkit.SpigotTimings.getEntityTimings(this); // Spigot
 
     public Entity(World world) {
         this.id = entityCount++;
@@ -405,6 +408,7 @@ public abstract class Entity {
         }
         // CraftBukkit end
 
+        org.bukkit.craftbukkit.SpigotTimings.entityMoveTimer.startTiming(); // Spigot
         if (this.Z) {
             this.boundingBox.d(d0, d1, d2);
             this.locX = (this.boundingBox.a + this.boundingBox.d) / 2.0D;
@@ -713,6 +717,7 @@ public abstract class Entity {
 
             this.world.methodProfiler.b();
         }
+        org.bukkit.craftbukkit.SpigotTimings.entityMoveTimer.stopTiming(); // Spigot
     }
 
     protected void D() {
