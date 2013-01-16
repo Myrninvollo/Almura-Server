@@ -300,15 +300,13 @@ public abstract class World implements IBlockAccess {
 
     // CraftBukkit start
     public Chunk getChunkAt(int i, int j) {
-        Chunk result = null;
-        synchronized (this.chunkLock) {
-            if (this.lastChunkAccessed == null || this.lastXAccessed != i || this.lastZAccessed != j) {
-                this.lastChunkAccessed = this.chunkProvider.getOrCreateChunk(i, j);
-                this.lastXAccessed = i;
-                this.lastZAccessed = j;
-            }
-            result = this.lastChunkAccessed;
+        //synchronized (this.chunkLock) {
+        Chunk result = this.lastChunkAccessed; // Exploit fact that read is atomic 
+        if (result == null || result.x != i || result.z != j) {
+            result = this.chunkProvider.getOrCreateChunk(i, j);
+            this.lastChunkAccessed = result; // Exploit fact that write is atomic
         }
+        //}
         return result;
     }
     // CraftBukkit end
