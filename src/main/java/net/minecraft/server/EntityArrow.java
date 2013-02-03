@@ -14,7 +14,7 @@ public class EntityArrow extends Entity implements IProjectile {
     private int f = -1;
     private int g;
     private int h;
-    private boolean inGround;
+    public boolean inGround = false; // Spigot - private -> public
     public int fromPlayer;
     public int shake;
     public Entity shooter;
