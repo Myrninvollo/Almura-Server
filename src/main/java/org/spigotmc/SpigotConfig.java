@@ -14,6 +14,7 @@ import net.minecraft.server.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.command.TicksPerSecondCommand;
 
 public class SpigotConfig
 {
@@ -122,5 +123,10 @@ public class SpigotConfig
     private static void preventProxies()
     {
         preventProxies = getBoolean( "settings.prevent-proxies", false );
+    }
+
+    private static void tpsCommand()
+    {
+        commands.put( "tps", new TicksPerSecondCommand( "tps" ) );
     }
 }
