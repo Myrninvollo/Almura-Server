@@ -1277,6 +1277,7 @@ public abstract class World implements IBlockAccess {
         this.f.clear();
         this.methodProfiler.c("regular");
 
+        org.spigotmc.ActivationRange.activateEntities(this); // Spigot
         timings.entityTick.startTiming(); // Spigot
         for (i = 0; i < this.entityList.size(); ++i) {
             entity = (Entity) this.entityList.get(i);
@@ -1437,8 +1438,13 @@ public abstract class World implements IBlockAccess {
         int j = MathHelper.floor(entity.locZ);
         byte b0 = 32;
 
-        if (!flag || this.e(i - b0, 0, j - b0, i + b0, 0, j + b0)) {
-            entity.tickTimer.startTiming(); // Spigot
+        // Spigot start
+        if (!org.spigotmc.ActivationRange.checkIfActive(entity)) {
+            entity.ticksLived++;
+            entity.inactiveTick();
+        } else {
+            entity.tickTimer.startTiming();
+            // Spigot end
             entity.U = entity.locX;
             entity.V = entity.locY;
             entity.W = entity.locZ;
