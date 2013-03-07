@@ -87,6 +87,7 @@ public class EntityTracker {
     }
 
     public void addEntity(Entity entity, int i, int j, boolean flag) {
+        if (Thread.currentThread() != MinecraftServer.getServer().primaryThread) throw new IllegalStateException("Asynchronous entity track!"); // Spigot
         if (i > this.d) {
             i = this.d;
         }
@@ -122,6 +123,7 @@ public class EntityTracker {
     }
 
     public void untrackEntity(Entity entity) {
+        if (Thread.currentThread() != MinecraftServer.getServer().primaryThread) throw new IllegalStateException("Asynchronous entity untrack!"); // Spigot
         if (entity instanceof EntityPlayer) {
             EntityPlayer entityplayer = (EntityPlayer) entity;
             Iterator iterator = this.b.iterator();

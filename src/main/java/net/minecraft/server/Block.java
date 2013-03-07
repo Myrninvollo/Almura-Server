@@ -342,9 +342,13 @@ public class Block {
         return 10;
     }
 
-    public void onPlace(World world, int i, int j, int k) {}
+    public void onPlace(World world, int i, int j, int k) {
+        if (Thread.currentThread() != MinecraftServer.getServer().primaryThread) throw new IllegalStateException("Asynchronous block onPlace!"); // Spigot
+    }
 
-    public void remove(World world, int i, int j, int k, int l, int i1) {}
+    public void remove(World world, int i, int j, int k, int l, int i1) {
+        if (Thread.currentThread() != MinecraftServer.getServer().primaryThread) throw new IllegalStateException("Asynchronous block remove!"); // Spigot
+    }
 
     public int a(Random random) {
         return 1;

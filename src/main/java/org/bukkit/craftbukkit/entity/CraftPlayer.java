@@ -218,6 +218,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     public void kickPlayer(String message) {
+        if (Thread.currentThread() != MinecraftServer.getServer().primaryThread) throw new IllegalStateException("Asynchronous player kick!"); // Spigot
         if (getHandle().playerConnection == null) return;
 
         getHandle().playerConnection.disconnect(message == null ? "" : message);
