@@ -925,6 +925,7 @@ public abstract class World implements IBlockAccess {
     }
 
     public boolean addEntity(Entity entity, SpawnReason spawnReason) { // Changed signature, added SpawnReason
+        if (Thread.currentThread() != MinecraftServer.getServer().primaryThread) throw new IllegalStateException("Asynchronous entity add!"); // Spigot
         if (entity == null) return false;
         // CraftBukkit end
 
@@ -1031,6 +1032,7 @@ public abstract class World implements IBlockAccess {
     }
 
     public void removeEntity(Entity entity) {
+        if (Thread.currentThread() != MinecraftServer.getServer().primaryThread) throw new IllegalStateException("Asynchronous entity remove!"); // Spigot
         entity.die();
         if (entity instanceof EntityHuman) {
             this.players.remove(entity);
@@ -2448,6 +2450,7 @@ public abstract class World implements IBlockAccess {
     }
 
     public void a(List list) {
+        if (Thread.currentThread() != MinecraftServer.getServer().primaryThread) throw new IllegalStateException("Asynchronous entity world add!"); // Spigot
         // CraftBukkit start
         Entity entity = null;
         for (int i = 0; i < list.size(); ++i) {
