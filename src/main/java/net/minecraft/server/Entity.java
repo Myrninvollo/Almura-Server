@@ -132,7 +132,7 @@ public abstract class Entity {
         this.maxFireTicks = 1;
         this.justCreated = true;
         this.datawatcher = new DataWatcher();
-        this.uniqueID = UUID.randomUUID();
+        this.uniqueID = new UUID(random.nextLong(), random.nextLong()); // Spigot
         this.at = EnumEntitySize.SIZE_2;
         this.world = world;
         this.setPosition(0.0D, 0.0D, 0.0D);
