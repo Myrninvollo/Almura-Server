@@ -49,7 +49,7 @@ public class WorldServer extends World implements org.bukkit.BlockChangeDelegate
         // CraftBukkit end
         this.server = minecraftserver;
         this.tracker = new EntityTracker(this);
-        this.manager = new PlayerChunkMap(this, minecraftserver.getPlayerList().o());
+        this.manager = new PlayerChunkMap(this, spigotConfig.viewDistance); // Spigot
         if (this.entitiesById == null) {
             this.entitiesById = new IntHashMap();
         }
