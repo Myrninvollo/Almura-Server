@@ -107,4 +107,18 @@ public class SpigotWorldConfig
         wheatModifier = getInt( "growth.wheat-modifier", 100 );
         log( "Wheat Growth Modifier: " + wheatModifier + "%" );
     }
+
+    public double itemMerge;
+    private void itemMerge()
+    {
+        itemMerge = getDouble("merge-radius.item", 2.5 );
+        log( "Item Merge Radius: " + itemMerge );
+    }
+
+    public double expMerge;
+    private void expMerge()
+    {
+        expMerge = getDouble("merge-radius.exp", 3.0 );
+        log( "Experience Merge Radius: " + expMerge );
+    }
 }
