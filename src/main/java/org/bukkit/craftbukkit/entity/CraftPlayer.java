@@ -1077,6 +1077,11 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     // Spigot start
     private final Player.Spigot spigot = new Player.Spigot()
     {
+        @Override
+        public InetSocketAddress getRawAddress()
+        {
+            return ( getHandle().playerConnection == null ) ? null : (InetSocketAddress) getHandle().playerConnection.networkManager.getSocket().getRemoteSocketAddress();
+        }
     };
 
     public Player.Spigot spigot()
