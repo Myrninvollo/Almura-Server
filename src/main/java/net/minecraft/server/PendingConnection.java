@@ -236,4 +236,17 @@ public class PendingConnection extends Connection {
     static boolean a(PendingConnection pendingconnection, boolean flag) {
         return pendingconnection.h = flag;
     }
+
+    // Spigot start
+    @Override
+    public void a(Packet250CustomPayload pcp) {
+        if (pcp.tag.equals("BungeeCord") && org.spigotmc.SpigotConfig.bungee && org.spigotmc.SpigotConfig.bungeeAddresses.contains(getSocket().getInetAddress().getHostAddress())) {
+            com.google.common.io.ByteArrayDataInput in = com.google.common.io.ByteStreams.newDataInput(pcp.data);
+            String subTag = in.readUTF();
+            if (subTag.equals("Login")) {
+                networkManager.setSocketAddress(new java.net.InetSocketAddress(in.readUTF(), in.readInt()));
+            }
+        }
+    }
+    // Spigot end
 }

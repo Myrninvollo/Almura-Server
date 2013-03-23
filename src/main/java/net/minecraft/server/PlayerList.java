@@ -296,7 +296,7 @@ public abstract class PlayerList {
         // depending on the outcome.
         EntityPlayer entity = new EntityPlayer(this.server, this.server.getWorldServer(0), s, this.server.O() ? new DemoPlayerInteractManager(this.server.getWorldServer(0)) : new PlayerInteractManager(this.server.getWorldServer(0)));
         Player player = entity.getBukkitEntity();
-        PlayerLoginEvent event = new PlayerLoginEvent(player, hostname, pendingconnection.getSocket().getInetAddress());
+        PlayerLoginEvent event = new PlayerLoginEvent(player, hostname, ((java.net.InetSocketAddress) pendingconnection.networkManager.getSocketAddress()).getAddress(), pendingconnection.getSocket().getInetAddress()); // Spigot
 
         SocketAddress socketaddress = pendingconnection.networkManager.getSocketAddress();
 

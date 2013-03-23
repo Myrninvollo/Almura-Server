@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -201,5 +202,15 @@ public class SpigotConfig
         }
 
         nettyThreads = getInt( "settings.netty-threads", 3 );
+    }
+    public static List<String> bungeeAddresses = Arrays.asList( new String[]
+    {
+        "127.0.0.1"
+    } );
+    public static boolean bungee = true;
+    private static void bungee()
+    {
+        bungeeAddresses = getList( "settings.bungeecord-addresses", bungeeAddresses );
+        bungee = getBoolean( "settings.bungeecord", true );
     }
 }

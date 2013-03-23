@@ -45,11 +45,11 @@ class ThreadLoginVerifier extends Thread {
                 return;
             }
 
-            AsyncPlayerPreLoginEvent asyncEvent = new AsyncPlayerPreLoginEvent(PendingConnection.d(this.pendingConnection), this.pendingConnection.getSocket().getInetAddress());
+            AsyncPlayerPreLoginEvent asyncEvent = new AsyncPlayerPreLoginEvent(PendingConnection.d(this.pendingConnection), ((java.net.InetSocketAddress) this.pendingConnection.networkManager.getSocketAddress()).getAddress()); // Spigot
             this.server.getPluginManager().callEvent(asyncEvent);
 
             if (PlayerPreLoginEvent.getHandlerList().getRegisteredListeners().length != 0) {
-                final PlayerPreLoginEvent event = new PlayerPreLoginEvent(PendingConnection.d(this.pendingConnection), this.pendingConnection.getSocket().getInetAddress());
+                final PlayerPreLoginEvent event = new PlayerPreLoginEvent(PendingConnection.d(this.pendingConnection), ((java.net.InetSocketAddress) this.pendingConnection.networkManager.getSocketAddress()).getAddress()); // Spigot
                 if (asyncEvent.getResult() != PlayerPreLoginEvent.Result.ALLOWED) {
                     event.disallow(asyncEvent.getResult(), asyncEvent.getKickMessage());
                 }
