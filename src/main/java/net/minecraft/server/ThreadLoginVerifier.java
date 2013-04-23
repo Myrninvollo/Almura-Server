@@ -21,6 +21,7 @@ class ThreadLoginVerifier extends Thread {
     CraftServer server;
 
     ThreadLoginVerifier(PendingConnection pendingconnection, CraftServer server) {
+        super("Login Verifier - " + pendingconnection.getName());
         this.server = server;
         // CraftBukkit end
         this.pendingConnection = pendingconnection;
