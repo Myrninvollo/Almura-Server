@@ -117,4 +117,10 @@ public class SpigotConfig
         config.addDefault( path, def );
         return config.getString( path, config.getString( path ) );
     }
+
+    public static boolean preventProxies;
+    private static void preventProxies()
+    {
+        preventProxies = getBoolean( "settings.prevent-proxies", false );
+    }
 }
