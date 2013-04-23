@@ -34,7 +34,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
         super(options);
         // CraftBukkit end
         this.m = new ConsoleLogManager("Minecraft-Server", (String) null, (String) null); // CraftBukkit - null last argument
-        new ThreadSleepForever(this);
+        // new ThreadSleepForever(this);
     }
 
     protected boolean init() throws java.net.UnknownHostException { // CraftBukkit - throws UnknownHostException
