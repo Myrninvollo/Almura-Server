@@ -30,7 +30,7 @@ public class NextTickListEntry implements Comparable {
     }
 
     public int hashCode() {
-        return (this.a * 1024 * 1024 + this.c * 1024 + this.b) * 256;
+        return (this.a * 257) ^ this.b ^ (this.c * 60217); // Spigot - better hash
     }
 
     public NextTickListEntry a(long i) {
