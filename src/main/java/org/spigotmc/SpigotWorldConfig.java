@@ -1,5 +1,6 @@
 package org.spigotmc;
 
+import java.util.Arrays;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -127,5 +128,30 @@ public class SpigotWorldConfig
     {
         viewDistance = getInt( "view-distance", Bukkit.getViewDistance() );
         log( "View Distance: " + viewDistance );
+    }
+
+    public boolean antiXray = true;
+    public int engineMode = 1;
+    public List<Integer> blocks = Arrays.asList( new Integer[]
+    {
+        1, 5, 14, 15, 16, 21, 48, 49, 54, 56, 73, 74, 82, 129, 130
+    } );
+    public AntiXray antiXrayInstance;
+    private void antiXray()
+    {
+        antiXray = getBoolean( "anti-xray.enabled", antiXray );
+        log( "Anti X-Ray: " + antiXray );
+
+        engineMode = getInt( "anti-xray.engine-mode", engineMode );
+        log( "\tEngine Mode: " + engineMode );
+
+        if ( SpigotConfig.version < 3 )
+        {
+            set( "anti-xray.blocks", blocks );
+        }
+        blocks = getList( "anti-xray.blocks", blocks );
+        log( "\tBlocks: " + blocks );
+
+        antiXrayInstance = new AntiXray( this );
     }
 }

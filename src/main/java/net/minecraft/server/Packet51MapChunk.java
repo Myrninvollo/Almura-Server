@@ -33,6 +33,7 @@ public class Packet51MapChunk extends Packet {
 
         this.d = chunkmap.c;
         this.c = chunkmap.b;
+        chunk.world.spigotConfig.antiXrayInstance.obfuscateSync(chunk.x, chunk.z, i, chunkmap.a, chunk.world); // Spigot
 
         try {
             this.inflatedBuffer = chunkmap.a;
