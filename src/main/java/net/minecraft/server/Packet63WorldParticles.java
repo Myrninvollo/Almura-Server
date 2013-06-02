@@ -17,6 +17,20 @@ public class Packet63WorldParticles extends Packet {
 
     public Packet63WorldParticles() {}
 
+    // Spigot start - Added constructor
+    public Packet63WorldParticles(String particleName, float x, float y, float z, float offsetX, float offsetY, float offsetZ, float speed, int count) {
+        a = particleName;
+        b = x;
+        c = y;
+        d = z;
+        e = offsetX;
+        f = offsetY;
+        g = offsetZ;
+        h = speed;
+        i = count;
+    }
+    // Spigot end
+
     public void a(DataInput datainput) throws java.io.IOException { // Spigot - throws
         this.a = a(datainput, 64);
         this.b = datainput.readFloat();
