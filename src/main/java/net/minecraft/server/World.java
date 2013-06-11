@@ -66,13 +66,35 @@ public abstract class World implements IBlockAccess {
     // CraftBukkit start - public, longhashset
     public boolean allowMonsters = true;
     public boolean allowAnimals = true;
-    protected LongHashSet chunkTickList = new LongHashSet();
     public long ticksPerAnimalSpawns;
     public long ticksPerMonsterSpawns;
     // CraftBukkit end
     private int O;
     int[] H;
     public boolean isStatic;
+    // Spigot start
+    protected final gnu.trove.map.hash.TLongShortHashMap chunkTickList;
+    protected float growthOdds = 100;
+    protected float modifiedOdds = 100;
+    private final byte chunkTickRadius;
+
+    public static long chunkToKey(int x, int z)
+    {
+        long k = ( ( ( (long) x ) & 0xFFFF0000L ) << 16 ) | ( ( ( (long) x ) & 0x0000FFFFL ) << 0 );
+        k     |= ( ( ( (long) z ) & 0xFFFF0000L ) << 32 ) | ( ( ( (long) z ) & 0x0000FFFFL ) << 16 );
+        return k;
+    }
+
+    public static int keyToX(long k)
+    {
+        return (int) ( ( ( k >> 16 ) & 0xFFFF0000 ) | ( k & 0x0000FFFF ) );
+    }
+
+    public static int keyToZ(long k)
+    {
+        return (int) ( ( ( k >> 32 ) & 0xFFFF0000L ) | ( ( k >> 16 ) & 0x0000FFFF ) );
+    }
+    // Spigot end
 
     public BiomeBase getBiome(int i, int j) {
         if (this.isLoaded(i, 0, j)) {
@@ -117,6 +139,11 @@ public abstract class World implements IBlockAccess {
         this.ticksPerAnimalSpawns = this.getServer().getTicksPerAnimalSpawns(); // CraftBukkit
         this.ticksPerMonsterSpawns = this.getServer().getTicksPerMonsterSpawns(); // CraftBukkit
         // CraftBukkit end
+        // Spigot start
+        this.chunkTickRadius = (byte) ( ( this.getServer().getViewDistance() < 7 ) ? this.getServer().getViewDistance() : 7 );
+        this.chunkTickList = new gnu.trove.map.hash.TLongShortHashMap( spigotConfig.chunksPerTick * 5, 0.7f, Long.MIN_VALUE, Short.MIN_VALUE );
+        this.chunkTickList.setAutoCompactionFactor( 0 );
+        // Spigot end
 
         this.O = this.random.nextInt(12000);
         this.H = new int['\u8000'];
@@ -1955,24 +1982,44 @@ public abstract class World implements IBlockAccess {
         int j;
         int k;
 
+        // Spigot start
+        int optimalChunks = spigotConfig.chunksPerTick;
+        // Quick conditions to allow us to exist early
+        if ( optimalChunks <= 0 || players.isEmpty() )
+        {
+            return;
+        }
+        // Keep chunks with growth inside of the optimal chunk range
+        int chunksPerPlayer = Math.min( 200, Math.max( 1, (int) ( ( ( optimalChunks - players.size() ) / (double) players.size() ) + 0.5 ) ) );
+        int randRange = 3 + chunksPerPlayer / 30;
+        // Limit to normal tick radius - including view distance
+        randRange = ( randRange > chunkTickRadius ) ? chunkTickRadius : randRange;
+        // odds of growth happening vs growth happening in vanilla
+        this.growthOdds = this.modifiedOdds = Math.max( 35, Math.min( 100, ( ( chunksPerPlayer + 1 ) * 100F ) / 15F ) );
+        // Spigot end
         for (i = 0; i < this.players.size(); ++i) {
             entityhuman = (EntityHuman) this.players.get(i);
             j = MathHelper.floor(entityhuman.locX / 16.0D);
             k = MathHelper.floor(entityhuman.locZ / 16.0D);
             byte b0 = 7;
 
-            for (int l = -b0; l <= b0; ++l) {
-                for (int i1 = -b0; i1 <= b0; ++i1) {
-                    // CraftBukkit start - Don't tick chunks queued for unload
-                    ChunkProviderServer chunkProviderServer = ((WorldServer) entityhuman.world).chunkProviderServer;
-                    if (chunkProviderServer.unloadQueue.contains(l + j, i1 + k)) {
-                        continue;
-                    }
-                    // CraftBukkit end
+            // Spigot start - Always update the chunk the player is on
+            long key = chunkToKey( j, k );
+            int existingPlayers = Math.max( 0, chunkTickList.get( key ) ); // filter out -1
+            chunkTickList.put(key, (short) (existingPlayers + 1));
 
-                    this.chunkTickList.add(org.bukkit.craftbukkit.util.LongHash.toLong(l + j, i1 + k)); // CraftBukkit
+            // Check and see if we update the chunks surrounding the player this tick
+            for ( int chunk = 0; chunk < chunksPerPlayer; chunk++ )
+            {
+                int dx = ( random.nextBoolean() ? 1 : -1 ) * random.nextInt( randRange );
+                int dz = ( random.nextBoolean() ? 1 : -1 ) * random.nextInt( randRange );
+                long hash = chunkToKey( dx + j, dz + k );
+                if ( !chunkTickList.contains( hash ) && this.isChunkLoaded( dx + j, dz + k ) )
+                {
+                    chunkTickList.put( hash, (short) -1 ); // no players
                 }
             }
+            // Spigot End
         }
 
         this.methodProfiler.b();
