@@ -423,6 +423,9 @@ public abstract class PlayerList {
             Player respawnPlayer = this.cserver.getPlayer(entityplayer1);
             PlayerRespawnEvent respawnEvent = new PlayerRespawnEvent(respawnPlayer, location, isBedSpawn);
             this.cserver.getPluginManager().callEvent(respawnEvent);
+            if (entityplayer.playerConnection.disconnected) {
+                return entityplayer;
+            }
 
             location = respawnEvent.getRespawnLocation();
             entityplayer.reset();
