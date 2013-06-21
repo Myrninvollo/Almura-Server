@@ -976,7 +976,12 @@ public class PlayerConnection extends Connection {
         }
 
         try {
-            this.minecraftServer.getLogger().info(event.getPlayer().getName() + " issued server command: " + event.getMessage()); // CraftBukkit
+            // Spigot Start
+            if ( org.spigotmc.SpigotConfig.logCommands )
+            {
+                this.minecraftServer.getLogger().info(event.getPlayer().getName() + " issued server command: " + event.getMessage()); // CraftBukkit
+            }
+            // Spigot end
             if (this.server.dispatchCommand(event.getPlayer(), event.getMessage().substring(1))) {
                 org.bukkit.craftbukkit.SpigotTimings.playerCommandTimer.stopTiming(); // Spigot
                 return;
