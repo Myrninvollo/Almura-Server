@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import net.minecraft.server.MinecraftServer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.command.TicksPerSecondCommand;
@@ -233,5 +234,23 @@ public class SpigotConfig
     private static void tabComplete()
     {
         tabComplete = getBoolean( "commands.tab-complete", true );
+    }
+
+    public static String whitelistMessage;
+    public static String unknownCommandMessage;
+    public static String serverFullMessage;
+    public static String outdatedClientMessage;
+    public static String outdatedServerMessage;
+    private static String transform(String s)
+    {
+        return ChatColor.translateAlternateColorCodes( '&', s ).replaceAll( "\\n", "\n" );
+    }
+    private static void messages()
+    {
+        whitelistMessage = transform( getString( "messages.whitelist", "You are not whitelisted on this server!" ) );
+        unknownCommandMessage = transform( getString( "messages.unknown-command", "Unknown command. Type \"/help\" for help." ) );
+        serverFullMessage = transform( getString( "messages.server-full", "The server is full!" ) );
+        outdatedClientMessage = transform( getString( "messages.outdated-client", "Outdated client!" ) );
+        outdatedServerMessage = transform( getString( "messages.outdated-server", "Outdated server!" ) );
     }
 }

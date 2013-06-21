@@ -310,7 +310,7 @@ public abstract class PlayerList {
 
             event.disallow(PlayerLoginEvent.Result.KICK_BANNED, s1);
         } else if (!this.isWhitelisted(s)) {
-            event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, "You are not white-listed on this server!");
+            event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, org.spigotmc.SpigotConfig.whitelistMessage); // Spigot
         } else {
             String s2 = socketaddress.toString();
 
@@ -326,7 +326,7 @@ public abstract class PlayerList {
 
                 event.disallow(PlayerLoginEvent.Result.KICK_BANNED, s3);
             } else if (this.players.size() >= this.maxPlayers) {
-                event.disallow(PlayerLoginEvent.Result.KICK_FULL, "The server is full!");
+                event.disallow(PlayerLoginEvent.Result.KICK_FULL, org.spigotmc.SpigotConfig.serverFullMessage); // Spigot
             } else {
                 event.disallow(PlayerLoginEvent.Result.ALLOWED, s2);
             }

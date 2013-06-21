@@ -80,9 +80,9 @@ public class PendingConnection extends Connection {
 
                 if (packet2handshake.d() != 78) {
                     if (packet2handshake.d() > 78) {
-                        this.disconnect("Outdated server!");
+                        this.disconnect(org.spigotmc.SpigotConfig.outdatedServerMessage); // Spigot
                     } else {
-                        this.disconnect("Outdated client!");
+                        this.disconnect(org.spigotmc.SpigotConfig.outdatedClientMessage); // Spigot
                     }
                 } else {
                     this.loginKey = this.server.getOnlineMode() ? Long.toString(random.nextLong(), 16) : "-";
