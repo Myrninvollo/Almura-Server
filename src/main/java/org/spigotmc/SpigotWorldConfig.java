@@ -154,4 +154,11 @@ public class SpigotWorldConfig
 
         antiXrayInstance = new AntiXray( this );
     }
+
+    public byte mobSpawnRange;
+    private void mobSpawnRange()
+    {
+        mobSpawnRange = (byte) getInt( "mob-spawn-range", 4 );
+        log( "Mob Spawn Range: " + mobSpawnRange );
+    }
 }
