@@ -228,4 +228,10 @@ public class SpigotConfig
     {
         logCommands = getBoolean( "commands.log", true );
     }
+
+    public static boolean tabComplete;
+    private static void tabComplete()
+    {
+        tabComplete = getBoolean( "commands.tab-complete", true );
+    }
 }

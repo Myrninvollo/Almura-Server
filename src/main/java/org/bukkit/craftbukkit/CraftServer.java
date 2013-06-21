@@ -1371,7 +1371,7 @@ public final class CraftServer implements Server {
     public List<String> tabCompleteCommand(Player player, String message) {
         List<String> completions = null;
         try {
-            completions = getCommandMap().tabComplete(player, message.substring(1));
+            completions = (org.spigotmc.SpigotConfig.tabComplete) ? getCommandMap().tabComplete(player, message.substring(1)) : null;
         } catch (CommandException ex) {
             player.sendMessage(ChatColor.RED + "An internal error occurred while attempting to tab-complete this command");
             getLogger().log(Level.SEVERE, "Exception when " + player.getName() + " attempted to tab complete " + message, ex);
