@@ -213,4 +213,13 @@ public class SpigotConfig
         bungeeAddresses = getList( "settings.bungeecord-addresses", bungeeAddresses );
         bungee = getBoolean( "settings.bungeecord", true );
     }
+
+    public static List<String> spamExclusions;
+    private static void spamExclusions()
+    {
+        spamExclusions = getList( "commands.spam-exclusions", Arrays.asList( new String[]
+        {
+            "/skill"
+        } ) );
+    }
 }
