@@ -33,6 +33,7 @@ public class Chunk {
     public int p;
     public long q;
     private int u;
+    protected gnu.trove.map.hash.TObjectIntHashMap<Class> entityCount = new gnu.trove.map.hash.TObjectIntHashMap<Class>(); // Spigot
 
     public Chunk(World world, int i, int j) {
         this.sections = new ChunkSection[16];
@@ -552,6 +553,22 @@ public class Chunk {
         entity.ak = k;
         entity.al = this.z;
         this.entitySlices[k].add(entity);
+        // Spigot start - increment creature type count
+        // Keep this synced up with World.a(Class)
+        if (entity instanceof EntityInsentient) {
+            EntityInsentient entityinsentient = (EntityInsentient) entity;
+            if (entityinsentient.isTypeNotPersistent() && entityinsentient.isPersistent()) {
+                return;
+            }
+        }
+        for ( EnumCreatureType creatureType : EnumCreatureType.values() )
+        {
+            if ( creatureType.a().isAssignableFrom( entity.getClass() ) )
+            {
+                this.entityCount.adjustOrPutValue( creatureType.a(), 1, 1 );
+            }
+        }
+        // Spigot end
     }
 
     public void b(Entity entity) {
@@ -568,6 +585,22 @@ public class Chunk {
         }
 
         this.entitySlices[i].remove(entity);
+        // Spigot start - decrement creature type count
+        // Keep this synced up with World.a(Class)
+        if (entity instanceof EntityInsentient) {
+            EntityInsentient entityinsentient = (EntityInsentient) entity;
+            if (entityinsentient.isTypeNotPersistent() && entityinsentient.isPersistent()) {
+                return;
+            }
+        }
+        for ( EnumCreatureType creatureType : EnumCreatureType.values() )
+        {
+            if ( creatureType.a().isAssignableFrom( entity.getClass() ) )
+            {
+                this.entityCount.adjustValue( creatureType.a(), -1 );
+            }
+        }
+        // Spigot end
     }
 
     public boolean d(int i, int j, int k) {
