@@ -843,7 +843,17 @@ public class PlayerConnection extends Connection {
                 }
 
                 // This section stays because it is only applicable to packets
-                if (chatSpamField.addAndGet(this, 20) > 200 && !this.minecraftServer.getPlayerList().isOp(this.player.getName())) { // CraftBukkit use thread-safe spam
+                // Spigot - spam exclusions
+                boolean counted = true;
+                for ( String exclude : org.spigotmc.SpigotConfig.spamExclusions )
+                {
+                    if ( exclude != null && s.startsWith( exclude ) )
+                    {
+                        counted = false;
+                        break;
+                    }
+                }
+                if (counted && chatSpamField.addAndGet(this, 20) > 200 && !this.minecraftServer.getPlayerList().isOp(this.player.getName())) { // CraftBukkit use thread-safe spam
                     if (packet3chat.a_()) {
                         Waitable waitable = new Waitable() {
                             @Override
