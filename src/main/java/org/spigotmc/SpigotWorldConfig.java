@@ -75,4 +75,36 @@ public class SpigotWorldConfig
         chunksPerTick = getInt( "chunks-per-tick", 650 );
         log( "Chunks to Grow per Tick: " + chunksPerTick );
     }
+
+    // Crop growth rates
+    public int cactusModifier;
+    public int caneModifier;
+    public int melonModifier;
+    public int mushroomModifier;
+    public int pumpkinModifier;
+    public int saplingModifier;
+    public int wheatModifier;
+    private void growthModifiers()
+    {
+        cactusModifier = getInt( "growth.cactus-modifier", 100 );
+        log( "Cactus Growth Modifier: " + cactusModifier + "%" );
+
+        caneModifier = getInt( "growth.cane-modifier", 100 );
+        log( "Cane Growth Modifier: " + caneModifier + "%" );
+
+        melonModifier = getInt( "growth.melon-modifier", 100 );
+        log( "Melon Growth Modifier: " + melonModifier + "%" );
+
+        mushroomModifier = getInt( "growth.mushroom-modifier", 100 );
+        log( "Mushroom Growth Modifier: " + mushroomModifier + "%" );
+
+        pumpkinModifier = getInt( "growth.pumpkin-modifier", 100 );
+        log( "Pumpkin Growth Modifier: " + pumpkinModifier + "%" );
+
+        saplingModifier = getInt( "growth.sapling-modifier", 100 );
+        log( "Sapling Growth Modifier: " + saplingModifier + "%" );
+
+        wheatModifier = getInt( "growth.wheat-modifier", 100 );
+        log( "Wheat Growth Modifier: " + wheatModifier + "%" );
+    }
 }
