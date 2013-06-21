@@ -222,4 +222,10 @@ public class SpigotConfig
             "/skill"
         } ) );
     }
+
+    public static boolean logCommands;
+    private static void logCommands()
+    {
+        logCommands = getBoolean( "commands.log", true );
+    }
 }
