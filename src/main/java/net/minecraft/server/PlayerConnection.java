@@ -1586,7 +1586,7 @@ public class PlayerConnection extends Connection {
                     flag = false;
                 } else {
                     for (i = 0; i < packet130updatesign.lines[j].length(); ++i) {
-                        if (SharedConstants.allowedCharacters.indexOf(packet130updatesign.lines[j].charAt(i)) < 0) {
+                        if (!SharedConstants.isAllowedChatCharacter(packet130updatesign.lines[j].charAt(i))) { // Spigot
                             flag = false;
                         }
                     }
