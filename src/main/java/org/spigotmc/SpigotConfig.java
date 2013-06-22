@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import net.minecraft.server.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -252,5 +254,28 @@ public class SpigotConfig
         serverFullMessage = transform( getString( "messages.server-full", "The server is full!" ) );
         outdatedClientMessage = transform( getString( "messages.outdated-client", "Outdated client!" ) );
         outdatedServerMessage = transform( getString( "messages.outdated-server", "Outdated server!" ) );
+    }
+
+    public static List<Pattern> logFilters;
+    private static void filters()
+    {
+        List<String> def = Arrays.asList( new String[]
+        {
+            "^(.*)(/login)(.*)$"
+        } );
+        logFilters = new ArrayList<Pattern>();
+
+        for ( String regex : (List<String>) getList( "settings.log-filters", def ) )
+        {
+            try
+            {
+                logFilters.add( Pattern.compile( regex ) );
+            } catch ( PatternSyntaxException ex )
+            {
+                Bukkit.getLogger().log( Level.WARNING, "Supplied filter " + regex + " is invalid, ignoring!", ex );
+            }
+        }
+
+        Bukkit.getLogger().setFilter( new LogFilter() );
     }
 }
