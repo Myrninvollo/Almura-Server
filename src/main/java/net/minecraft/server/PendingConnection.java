@@ -113,7 +113,7 @@ public class PendingConnection extends Connection {
             }
 
             this.j = true;
-            if (this.server.getOnlineMode()) {
+            if (true) { // Spigot - Always fire
                 (new ThreadLoginVerifier(this, server.server)).start(); // CraftBukkit - add CraftServer
             } else {
                 this.h = true;
