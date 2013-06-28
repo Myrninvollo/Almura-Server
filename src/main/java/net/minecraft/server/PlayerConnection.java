@@ -1096,6 +1096,13 @@ public class PlayerConnection extends Connection {
 
         WorldServer worldserver = this.minecraftServer.getWorldServer(this.player.dimension);
         Entity entity = worldserver.getEntity(packet7useentity.target);
+        // Spigot Start
+        if ( entity == player )
+        {
+            disconnect( "Cannot interact with self!" );
+            return;
+        }
+        // Spigot End
 
         this.player.u();
         if (entity != null) {
