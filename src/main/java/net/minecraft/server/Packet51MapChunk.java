@@ -29,7 +29,7 @@ public class Packet51MapChunk extends Packet {
         this.b = chunk.z;
         this.e = flag;
         ChunkMap chunkmap = a(chunk, flag, i);
-        Deflater deflater = new Deflater(-1);
+        Deflater deflater = new Deflater(4); // Spigot 4 -> -1
 
         this.d = chunkmap.c;
         this.c = chunkmap.b;
