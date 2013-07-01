@@ -16,7 +16,7 @@ public class PendingConnection extends Connection {
     private static Random random = new Random();
     private byte[] d;
     private final MinecraftServer server;
-    public final NetworkManager networkManager;
+    public final INetworkManager networkManager;
     public boolean b;
     private int f;
     private String g;
@@ -26,10 +26,15 @@ public class PendingConnection extends Connection {
     private SecretKey k;
     public String hostname = ""; // CraftBukkit - add field
 
+    public PendingConnection(MinecraftServer minecraftserver, org.spigotmc.netty.NettyNetworkManager networkManager) {
+        this.server = minecraftserver;
+        this.networkManager = networkManager;
+    }
+
     public PendingConnection(MinecraftServer minecraftserver, Socket socket, String s) throws java.io.IOException { // CraftBukkit - throws IOException
         this.server = minecraftserver;
         this.networkManager = new NetworkManager(minecraftserver.getLogger(), socket, s, this, minecraftserver.H().getPrivate());
-        this.networkManager.e = 0;
+        // this.networkManager.e = 0;
     }
 
     // CraftBukkit start
@@ -148,7 +153,7 @@ public class PendingConnection extends Connection {
             String s = null;
             // CraftBukkit
             org.bukkit.event.server.ServerListPingEvent pingEvent = org.bukkit.craftbukkit.event.CraftEventFactory.callServerListPingEvent(this.server.server, getSocket().getInetAddress(), this.server.getMotd(), playerlist.getPlayerCount(), playerlist.getMaxPlayers());
-            if (packet254getinfo.d()) {
+            if (false) { // Spigot: TODO: Use trick from Bungee maybe?
                 // CraftBukkit
                 s = pingEvent.getMotd() + "\u00A7" + playerlist.getPlayerCount() + "\u00A7" + pingEvent.getMaxPlayers();
             } else {
@@ -177,9 +182,18 @@ public class PendingConnection extends Connection {
 
             this.networkManager.queue(new Packet255KickDisconnect(s));
             this.networkManager.d();
-            if (inetaddress != null && this.server.ag() instanceof DedicatedServerConnection) {
-                ((DedicatedServerConnection) this.server.ag()).a(inetaddress);
+            // Spigot start
+            if ( inetaddress != null )
+            {
+                if ( this.server.ag() instanceof DedicatedServerConnection )
+                {
+                    ((DedicatedServerConnection) this.server.ag()).a(inetaddress);
+                } else
+                {
+                    ((org.spigotmc.netty.NettyServerConnection)this.server.ag()).unThrottle( inetaddress );
+                }
             }
+            // Spigot end
 
             this.b = true;
         } catch (Exception exception) {

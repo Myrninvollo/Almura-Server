@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,5 +143,63 @@ public class SpigotConfig
     private static void tpsCommand()
     {
         commands.put( "tps", new TicksPerSecondCommand( "tps" ) );
+    }
+
+    public static class Listener
+    {
+
+        public String host;
+        public int port;
+        public boolean netty;
+        public long connectionThrottle;
+
+        public Listener(String host, int port, boolean netty, long connectionThrottle)
+        {
+            this.host = host;
+            this.port = port;
+            this.netty = netty;
+            this.connectionThrottle = connectionThrottle;
+        }
+    }
+    public static List<Listener> listeners = new ArrayList<Listener>();
+    public static int nettyThreads;
+    private static void listeners()
+    {
+        listeners.clear(); // We don't rebuild listeners on reload but we should clear them out!
+
+        Map<String, Object> def = new HashMap<String, Object>();
+        def.put( "host", "default" );
+        def.put( "port", "default" );
+        def.put( "netty", true );
+        // def.put( "throttle", "default" );
+
+        config.addDefault( "listeners", Collections.singletonList( def ) );
+        for ( Map<String, Object> info : (List<Map<String, Object>>) config.getList( "listeners" ) )
+        {
+            String host = (String) info.get( "host" );
+            if ( "default".equals( host ) )
+            {
+                host = Bukkit.getIp();
+            } else
+            {
+                throw new IllegalArgumentException( "Can only bind listener to default! Configure it in server.properties" );
+            }
+            int port ;
+            
+            if (info.get( "port" ) instanceof Integer){
+                throw new IllegalArgumentException( "Can only bind port to default! Configure it in server.properties");
+            } else{
+                port = Bukkit.getPort();
+            }
+            boolean netty = (Boolean) info.get( "netty" );
+            // long connectionThrottle = ( info.get( "throttle" ) instanceof Number ) ? ( (Number) info.get( "throttle" ) ).longValue() : Bukkit.getConnectionThrottle();
+            listeners.add( new Listener( host, port, netty, Bukkit.getConnectionThrottle() ) );
+        }
+        if ( listeners.size() != 1 )
+        {
+            throw new IllegalArgumentException( "May only have one listener!" );
+        }
+
+        nettyThreads = getInt( "settings.netty-threads", 3 );
     }
 }

@@ -114,6 +114,21 @@
       <artifactId>trove4j</artifactId>
       <version>3.0.3</version>
     </dependency>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-codec</artifactId>
+      <version>4.0.9.Final</version>
+    </dependency>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-handler</artifactId>
+      <version>4.0.9.Final</version>
+    </dependency>
+    <dependency>
+      <groupId>org.javassist</groupId>
+      <artifactId>javassist</artifactId>
+      <version>3.18.0-GA</version>
+    </dependency>
   </dependencies>
 
   <!-- This builds a completely 'ready to start' jar with all dependencies inside -->
