@@ -917,7 +917,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
     }
 
     public void sendMessage(ChatMessage chatmessage) {
-        this.getLogger().info(chatmessage.toString());
+        this.console.sendMessage(chatmessage.toString()); // Spigot - we want coloured and pretty messages too!
     }
 
     public boolean a(int i, String s) {
