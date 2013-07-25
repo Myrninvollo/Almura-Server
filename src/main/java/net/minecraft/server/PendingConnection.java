@@ -66,13 +66,14 @@ public class PendingConnection extends Connection {
         }
     }
 
+    private static final java.util.regex.Pattern validName = java.util.regex.Pattern.compile("^[a-zA-Z0-9_-]{2,16}$"); // Spigot
     public void a(Packet2Handshake packet2handshake) {
         if (this.g != null) {
             this.disconnect("Quit repeating yourself!");
         } else {
             this.hostname = packet2handshake.c + ':' + packet2handshake.d; // CraftBukkit - initialize field
             this.g = packet2handshake.f();
-            if (!this.g.equals(StripColor.a(this.g))) {
+            if (!this.g.equals(StripColor.a(this.g)) || !validName.matcher( this.g ).matches() ) { // Spigot
                 this.disconnect("Invalid username!");
             } else {
                 PublicKey publickey = this.server.H().getPublic();
