@@ -1122,6 +1122,19 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
             getHandle().playerConnection.sendPacket( packet );
         }
+
+        @Override
+        public boolean getCollidesWithEntities()
+        {
+            return getHandle().collidesWithEntities;
+        }
+
+        @Override
+        public void setCollidesWithEntities(boolean collides)
+        {
+            getHandle().collidesWithEntities = collides;
+            getHandle().m = collides; // First boolean of Entity
+        }
     };
 
     public Player.Spigot spigot()
