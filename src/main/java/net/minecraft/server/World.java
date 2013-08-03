@@ -29,7 +29,25 @@ import org.bukkit.event.weather.ThunderChangeEvent;
 public abstract class World implements IBlockAccess {
 
     public boolean d;
-    public List entityList = new ArrayList();
+    public List entityList = new ArrayList() { // Spigot start - guard entity list from removals
+        @Override
+        public Object remove(int index) {
+            guard();
+            return super.remove(index);
+        }
+
+        @Override
+        public boolean remove(Object o) {
+            guard();
+            return super.remove(o);
+        }
+
+        private void guard() {
+            if (guardEntityList) {
+                throw new java.util.ConcurrentModificationException();
+            }
+        }
+    }; // Spigot end
     protected List f = new ArrayList();
     public Set tileEntityList = new HashSet(); // CraftBukkit - ArrayList -> HashSet
     private List a = new ArrayList();
@@ -74,6 +92,7 @@ public abstract class World implements IBlockAccess {
     int[] H;
     public boolean isStatic;
     // Spigot start
+    private boolean guardEntityList = false;
     protected final gnu.trove.map.hash.TLongShortHashMap chunkTickList;
     protected float growthOdds = 100;
     protected float modifiedOdds = 100;
@@ -1286,6 +1305,7 @@ public abstract class World implements IBlockAccess {
 
         org.spigotmc.ActivationRange.activateEntities(this); // Spigot
         timings.entityTick.startTiming(); // Spigot
+        guardEntityList = true; // Spigot
         for (i = 0; i < this.entityList.size(); ++i) {
             entity = (Entity) this.entityList.get(i);
 
@@ -1333,12 +1353,15 @@ public abstract class World implements IBlockAccess {
                     this.getChunkAt(j, k).b(entity);
                 }
 
+                guardEntityList = false; // Spigot
                 this.entityList.remove(i--);
+                guardEntityList = true; // Spigot
                 this.b(entity);
             }
 
             this.methodProfiler.b();
         }
+        guardEntityList = false; // Spigot
 
         timings.entityTick.stopTiming(); // Spigot
         this.methodProfiler.c("tileEntities");
