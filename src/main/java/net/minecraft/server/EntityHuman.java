@@ -258,6 +258,10 @@ public abstract class EntityHuman extends EntityLiving implements ICommandListen
                 // Update client
                 if (this instanceof EntityPlayer) {
                     ((EntityPlayer) this).playerConnection.sendPacket(new Packet103SetSlot((byte) 0, activeContainer.a((IInventory) this.inventory, this.inventory.itemInHandIndex).index, this.f));
+                    // Spigot Start
+                    ((EntityPlayer) this).getBukkitEntity().updateInventory();
+                    ((EntityPlayer) this).getBukkitEntity().updateScaledHealth();
+                    // Spigot End
                 }
                 return;
             }
