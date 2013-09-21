@@ -178,7 +178,15 @@ public abstract class StructureGenerator extends WorldGenBase {
 
     private void a(World world) {
         if (this.e == null) {
-            this.e = (WorldGenFeature) world.a(WorldGenFeature.class, this.a());
+            // Spigot Start
+            if ( world.spigotConfig.saveStructureInfo )
+            {
+                this.e = (WorldGenFeature) world.a( WorldGenFeature.class, this.a() );
+            } else
+            {
+                this.e = new WorldGenFeature( this.a() );
+            }
+            // Spigot End
             if (this.e == null) {
                 this.e = new WorldGenFeature(this.a());
                 world.a(this.a(), (WorldMapBase) this.e);
