@@ -252,10 +252,15 @@ public class Chunk {
         }
 
         if (i1 != l) {
-            this.world.e(i + this.x * 16, k + this.z * 16, i1, l);
+            // Almura Start
+            int realX = this.x << 4;
+            int realZ = this.z << 4;
+            this.world.e(i + this.x << 16, k + this.z << 16, i1, l);
+            int j1 = realX + i;
+            int k1 = realZ + k;
+            // Almura End
+
             this.heightMap[k << 4 | i] = i1;
-            int j1 = this.x * 16 + i;
-            int k1 = this.z * 16 + k;
             int l1;
             int i2;
 
@@ -267,7 +272,7 @@ public class Chunk {
                         chunksection = this.sections[l1 >> 4];
                         if (chunksection != null) {
                             chunksection.setSkyLight(i, l1 & 15, k, 15);
-                            this.world.p((this.x << 4) + i, l1, (this.z << 4) + k);
+                            this.world.p(j1, l1, k1); // Almura
                         }
                     }
                 } else {
@@ -275,7 +280,7 @@ public class Chunk {
                         chunksection = this.sections[l1 >> 4];
                         if (chunksection != null) {
                             chunksection.setSkyLight(i, l1 & 15, k, 0);
-                            this.world.p((this.x << 4) + i, l1, (this.z << 4) + k);
+                            this.world.p(j1, l1, k1); // Almura
                         }
                     }
                 }
@@ -304,12 +309,15 @@ public class Chunk {
 
             l1 = this.heightMap[k << 4 | i];
             i2 = l;
-            int j2 = l1;
+            // Almura Start
+            int j2;
 
             if (l1 < l) {
-                i2 = l1;
                 j2 = l;
+            } else {
+                j2 = l1;
             }
+            // Almura End
 
             if (l1 < this.p) {
                 this.p = l1;
