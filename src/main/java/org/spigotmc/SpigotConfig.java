@@ -292,4 +292,24 @@ public class SpigotConfig
         commands.put( "restart", new RestartCommand( "restart" ) );
         WatchdogThread.doStart( timeoutTime, restartOnCrash );
     }
+
+    // Almura Start
+    public static int protocolVersion;
+    private static void protocolVersion()
+    {
+        protocolVersion = getInt( "settings.version-spoof.protocol", 78 ); // TODO: Keep updated with Minecraft Protocol Version
+    }
+
+    public static String minecraftVersion;
+    private static void minecraftVersion()
+    {
+        minecraftVersion = getString( "settings.version-spoof.minecraft-version", MinecraftServer.getServer().getVersion() );
+    }
+
+    public static boolean versionSpoof;
+    private static void versionSpoof()
+    {
+        versionSpoof = getBoolean( "settings.version-spoof.enabled", false );
+    }
+    // Almura End
 }
