@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Random;
 import javax.crypto.SecretKey;
 
+import org.spigotmc.SpigotConfig; // Almura
+
 public class PendingConnection extends Connection {
 
     private static Random random = new Random();
@@ -25,6 +27,8 @@ public class PendingConnection extends Connection {
     private boolean j;
     private SecretKey k;
     public String hostname = ""; // CraftBukkit - add field
+    private int protocolVersion = SpigotConfig.versionSpoof ? SpigotConfig.protocolVersion : 78; // Almura
+    private String minecraftVersion = SpigotConfig.versionSpoof ? SpigotConfig.minecraftVersion : MinecraftServer.getServer().getVersion(); // Almura
 
     public PendingConnection(MinecraftServer minecraftserver, org.spigotmc.netty.NettyNetworkManager networkManager) {
         this.server = minecraftserver;
@@ -78,8 +82,8 @@ public class PendingConnection extends Connection {
             } else {
                 PublicKey publickey = this.server.H().getPublic();
 
-                if (packet2handshake.d() != 78) {
-                    if (packet2handshake.d() > 78) {
+                if (packet2handshake.d() != protocolVersion) { // AEM
+                    if (packet2handshake.d() > protocolVersion) { // AEM
                         this.disconnect(org.spigotmc.SpigotConfig.outdatedServerMessage); // Spigot
                     } else {
                         this.disconnect(org.spigotmc.SpigotConfig.outdatedClientMessage); // Spigot
@@ -159,7 +163,7 @@ public class PendingConnection extends Connection {
                 s = pingEvent.getMotd() + "\u00A7" + playerlist.getPlayerCount() + "\u00A7" + pingEvent.getMaxPlayers();
             } else {
                 // CraftBukkit start - Don't create a list from an array
-                Object[] list = new Object[] { 1, 78, this.server.getVersion(), pingEvent.getMotd(), playerlist.getPlayerCount(), pingEvent.getMaxPlayers() };
+                Object[] list = new Object[] { 1, protocolVersion, minecraftVersion, pingEvent.getMotd(), playerlist.getPlayerCount(), pingEvent.getMaxPlayers() }; // AEM
 
                 StringBuilder builder = new StringBuilder();
                 for (Object object : list) {
