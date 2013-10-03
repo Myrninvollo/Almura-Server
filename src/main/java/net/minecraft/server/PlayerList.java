@@ -1067,4 +1067,10 @@ public abstract class PlayerList {
     public void sendMessage(ChatMessage chatmessage) {
         this.sendMessage(chatmessage, true);
     }
+
+    // Almura Start
+    public void setMaxPlayers(int max){
+        this.maxPlayers = max;
+    }
+    // Almura End
 }

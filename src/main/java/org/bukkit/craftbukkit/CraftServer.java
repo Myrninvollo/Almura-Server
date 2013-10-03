@@ -1163,7 +1163,7 @@ public final class CraftServer implements Server {
     }
 
     public void setWhitelist(boolean value) {
-        playerList.hasWhitelist = value;
+        playerList.setHasWhitelist(value); // AEM
         console.getPropertyManager().a("white-list", value);
     }
 
@@ -1415,4 +1415,18 @@ public final class CraftServer implements Server {
         this.printSaveWarning = true;
         getLogger().log(Level.WARNING, "A manual (plugin-induced) save has been detected while server is configured to auto-save. This may affect performance.", warningState == WarningState.ON ? new Throwable() : null);
     }
+
+    // Almura Start
+    public DedicatedPlayerList getPlayerList(){
+        return this.playerList;
+    }
+
+    public void setMaxPlayers(int max) {
+        ((PlayerList)playerList).setMaxPlayers(max);
+    }
+
+    public void setMotd(String motd){
+        console.setMotd(motd);
+    }
+    // Almura End
 }
