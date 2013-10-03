@@ -82,8 +82,8 @@ public class PendingConnection extends Connection {
             } else {
                 PublicKey publickey = this.server.H().getPublic();
 
-                if (packet2handshake.d() != protocolVersion) { // AEM
-                    if (packet2handshake.d() > protocolVersion) { // AEM
+                if (packet2handshake.d() != protocolVersion) { // Almura
+                    if (packet2handshake.d() > protocolVersion) { // Almura
                         this.disconnect(org.spigotmc.SpigotConfig.outdatedServerMessage); // Spigot
                     } else {
                         this.disconnect(org.spigotmc.SpigotConfig.outdatedClientMessage); // Spigot
@@ -163,7 +163,7 @@ public class PendingConnection extends Connection {
                 s = pingEvent.getMotd() + "\u00A7" + playerlist.getPlayerCount() + "\u00A7" + pingEvent.getMaxPlayers();
             } else {
                 // CraftBukkit start - Don't create a list from an array
-                Object[] list = new Object[] { 1, protocolVersion, minecraftVersion, pingEvent.getMotd(), playerlist.getPlayerCount(), pingEvent.getMaxPlayers() }; // AEM
+                Object[] list = new Object[] { 1, protocolVersion, minecraftVersion, pingEvent.getMotd(), playerlist.getPlayerCount(), pingEvent.getMaxPlayers() }; // Almura
 
                 StringBuilder builder = new StringBuilder();
                 for (Object object : list) {

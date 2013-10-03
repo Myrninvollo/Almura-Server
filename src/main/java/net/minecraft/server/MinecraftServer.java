@@ -785,7 +785,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
         org.bukkit.plugin.Plugin[] plugins = server.getPluginManager().getPlugins();
 
         result.append(server.getName());
-        result.append(" on Bukkit ");
+        result.append(" on Almura "); // Almura - Use our name
         result.append(server.getBukkitVersion());
 
         if (plugins.length > 0 && this.server.getQueryPlugins()) {
@@ -915,7 +915,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
     }
 
     public String getName() {
-        return "Server";
+        return "Almura"; // Almura - Use our name
     }
 
     public void sendMessage(ChatMessage chatmessage) {
