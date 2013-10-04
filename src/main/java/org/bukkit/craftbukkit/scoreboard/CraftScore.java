@@ -3,6 +3,7 @@ package org.bukkit.craftbukkit.scoreboard;
 import java.util.Map;
 
 import net.minecraft.server.Scoreboard;
+import net.minecraft.server.ScoreboardObjective; // Almura
 import net.minecraft.server.ScoreboardScore;
 
 import org.bukkit.Bukkit;
@@ -53,4 +54,23 @@ final class CraftScore implements Score {
     public CraftScoreboard getScoreboard() {
         return objective.getScoreboard();
     }
+
+    // Almura Start
+    public boolean isSet() throws IllegalStateException {
+        return objective.checkState().board.getPlayerObjectives(playerName).containsKey(objective.getHandle());
+    }
+
+    public void reset() throws IllegalStateException {
+        CraftScoreboard myBoard = objective.checkState();
+        Map<ScoreboardObjective, ScoreboardScore> savedScores = myBoard.board.getPlayerObjectives(playerName);
+        if (savedScores.remove(objective.getHandle()) == null) {
+            // If they don't have a score to delete, don't delete it.
+            return;
+        }
+        myBoard.board.resetPlayerScores(playerName);
+        for (Map.Entry<ScoreboardObjective, ScoreboardScore> e : savedScores.entrySet()) {
+            myBoard.board.getPlayerScoreForObjective(playerName, e.getKey()).setScore(e.getValue().getScore());
+        }
+    }
+    // Almura End
 }

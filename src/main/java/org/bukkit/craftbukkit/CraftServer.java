@@ -1163,7 +1163,7 @@ public final class CraftServer implements Server {
     }
 
     public void setWhitelist(boolean value) {
-        playerList.setHasWhitelist(value); // AEM
+        playerList.setHasWhitelist(value); // Almura
         console.getPropertyManager().a("white-list", value);
     }
 
