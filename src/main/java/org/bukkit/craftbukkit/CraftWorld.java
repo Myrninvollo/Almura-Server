@@ -193,7 +193,13 @@ public class CraftWorld implements World {
         return true;
     }
 
+    // Almura Start
     public boolean regenerateChunk(int x, int z) {
+        return regenerateChunk(x, z, true);
+    }
+
+    public boolean regenerateChunk(int x, int z, boolean refresh) {
+    // Almura End
         unloadChunk(x, z, false, false);
 
         world.chunkProviderServer.unloadQueue.remove(x, z);
@@ -208,7 +214,11 @@ public class CraftWorld implements World {
 
         chunkLoadPostProcess(chunk, x, z);
 
-        refreshChunk(x, z);
+        // Almura Start
+        if (refresh) {
+            refreshChunk(x, z);
+        }
+        // Almura End
 
         return chunk != null;
     }
