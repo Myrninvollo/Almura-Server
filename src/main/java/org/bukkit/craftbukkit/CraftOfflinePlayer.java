@@ -26,7 +26,7 @@ public class CraftOfflinePlayer implements OfflinePlayer, ConfigurationSerializa
     private final CraftServer server;
     private final WorldNBTStorage storage;
 
-    protected CraftOfflinePlayer(CraftServer server, String name) {
+    public CraftOfflinePlayer(CraftServer server, String name) { // Almura - protected -> public
         this.server = server;
         this.name = name;
         this.storage = (WorldNBTStorage) (server.console.worlds.get(0).getDataManager());
