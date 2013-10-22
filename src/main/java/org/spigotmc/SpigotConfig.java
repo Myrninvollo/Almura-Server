@@ -20,6 +20,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.command.ProtocolCommand;
 import org.bukkit.craftbukkit.command.TicksPerSecondCommand;
 
 public class SpigotConfig
@@ -297,6 +298,11 @@ public class SpigotConfig
     private static void versionSpoof()
     {
         versionSpoof = getBoolean( "settings.version-spoof.enabled", false );
+    }
+
+    private static void protocolCommand()
+    {
+        commands.put( "protocol", new ProtocolCommand( "protocol" ) );
     }
     // Almura End
 }
