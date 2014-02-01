@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.Random;
 
 import org.bukkit.Server;
+import org.bukkit.craftbukkit.chunkio.ChunkIOExecutor;
 import org.bukkit.craftbukkit.util.LongHash;
 import org.bukkit.craftbukkit.util.LongHashSet;
 import org.bukkit.craftbukkit.util.LongObjectHashMap;
@@ -86,20 +87,37 @@ public class ChunkProviderServer implements IChunkProvider {
 
     public Chunk getChunkAt(int i, int j, Runnable runnable) {
         this.unloadQueue.remove(i, j);
-        Chunk chunk = (Chunk) this.chunks.get(LongHash.toLong(i, j));
-        boolean newChunk = false;
+        Chunk chunk = this.chunks.get(LongHash.toLong(i, j));
         ChunkRegionLoader loader = null;
 
         if (this.e instanceof ChunkRegionLoader) {
             loader = (ChunkRegionLoader) this.e;
         }
 
-        // If the chunk exists but isn't loaded do it async
-        if (chunk == null && runnable != null && loader != null && loader.chunkExists(this.world, i, j)) {
-            org.bukkit.craftbukkit.chunkio.ChunkIOExecutor.queueChunkLoad(this.world, loader, this, i, j, runnable);
-            return null;
+        // We can only use the queue for already generated chunks
+        if (chunk == null && loader != null && loader.chunkExists(this.world, i, j)) {
+            if (runnable != null) {
+                ChunkIOExecutor.queueChunkLoad(this.world, loader, this, i, j, runnable);
+                return null;
+            } else {
+                chunk = ChunkIOExecutor.syncChunkLoad(this.world, loader, this, i, j);
+            }
+        } else if (chunk == null) {
+            chunk = this.originalGetChunkAt(i, j);
         }
-        // CraftBukkit end
+
+        // If we didn't load the chunk async and have a callback run it now
+        if (runnable != null) {
+            runnable.run();
+        }
+
+        return chunk;
+    }
+
+    public Chunk originalGetChunkAt(int i, int j) {
+        this.unloadQueue.remove(i, j);
+        Chunk chunk = (Chunk) this.chunks.get(LongHash.toLong(i, j));
+        boolean newChunk = false;
 
         if (chunk == null) {
             org.bukkit.craftbukkit.SpigotTimings.syncChunkLoadTimer.startTiming(); // Spigot
@@ -143,12 +161,6 @@ public class ChunkProviderServer implements IChunkProvider {
             chunk.a(this, this, i, j);
             org.bukkit.craftbukkit.SpigotTimings.syncChunkLoadTimer.stopTiming(); // Spigot
         }
-
-        // CraftBukkit start - If we didn't need to load the chunk run the callback now
-        if (runnable != null) {
-            runnable.run();
-        }
-        // CraftBukkit end
 
         return chunk;
     }
