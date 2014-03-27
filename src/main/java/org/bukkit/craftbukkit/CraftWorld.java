@@ -187,6 +187,13 @@ public class CraftWorld implements World {
             world.chunkProviderServer.saveChunkNOP(chunk);
         }
 
+        // Almura - Remove the chunk from cache if it is unloaded
+        net.minecraft.server.Chunk result = world.lastChunkAccessed;
+        if (result != null && result.x == chunk.x && result.z == chunk.z) {
+            world.lastChunkAccessed = null;
+        }
+        // Almura end
+
         world.chunkProviderServer.unloadQueue.remove(x, z);
         world.chunkProviderServer.chunks.remove(LongHash.toLong(x, z));
 

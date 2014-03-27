@@ -289,6 +289,12 @@ public class ChunkProviderServer implements IChunkProvider {
                 long chunkcoordinates = this.unloadQueue.popFirst();
                 Chunk chunk = this.chunks.get(chunkcoordinates);
                 if (chunk == null) continue;
+                // Almura - Remove the chunk from cache if it is unloaded
+                Chunk result = world.lastChunkAccessed;
+                if (result != null && result.x == chunk.x && result.z == chunk.z) {
+                    world.lastChunkAccessed = null;
+                }
+                // Almura end
 
                 ChunkUnloadEvent event = new ChunkUnloadEvent(chunk.bukkitChunk);
                 server.getPluginManager().callEvent(event);
