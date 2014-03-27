@@ -6,6 +6,7 @@ import java.net.SocketAddress;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -48,6 +49,21 @@ public abstract class PlayerList {
     private EnumGamemode l;
     private boolean m;
     private int n;
+
+    // Almura start
+    private final Map<String, EntityPlayer> playerMap = new HashMap<String, EntityPlayer>();
+    private void removePlayer(EntityPlayer player) {
+        playerMap.remove(player.getName().toLowerCase());
+    }
+
+    private void putPlayer(EntityPlayer player) {
+        playerMap.put(player.getName().toLowerCase(), player);
+    }
+
+    private EntityPlayer getPlayerByName(String name) {
+        return playerMap.get(name.toLowerCase());
+    }
+    // Almura end
 
     // CraftBukkit start
     private CraftServer cserver;
@@ -200,6 +216,7 @@ public abstract class PlayerList {
         cserver.detectListNameConflict(entityplayer); // CraftBukkit
         // this.sendAll(new Packet201PlayerInfo(entityplayer.getName(), true, 1000)); // CraftBukkit - replaced with loop below
         this.players.add(entityplayer);
+        putPlayer(entityplayer); // Almura
         WorldServer worldserver = this.server.getWorldServer(entityplayer.dimension);
 
         // CraftBukkit start
@@ -271,6 +288,7 @@ public abstract class PlayerList {
         worldserver.kill(entityplayer);
         worldserver.getPlayerChunkMap().removePlayer(entityplayer);
         this.players.remove(entityplayer);
+        removePlayer(entityplayer); // Almura
         ChunkIOExecutor.adjustPoolSize(this.getPlayerCount()); // CraftBukkit
 
         // CraftBukkit start - .name -> .listName, replace sendAll with loop
@@ -343,24 +361,12 @@ public abstract class PlayerList {
     }
 
     public EntityPlayer processLogin(EntityPlayer player) { // CraftBukkit - String -> EntityPlayer
-        String s = player.name; // CraftBukkit
-        ArrayList arraylist = new ArrayList();
-
-        EntityPlayer entityplayer;
-
-        for (int i = 0; i < this.players.size(); ++i) {
-            entityplayer = (EntityPlayer) this.players.get(i);
-            if (entityplayer.getName().equalsIgnoreCase(s)) {
-                arraylist.add(entityplayer);
-            }
-        }
-
-        Iterator iterator = arraylist.iterator();
-
-        while (iterator.hasNext()) {
-            entityplayer = (EntityPlayer) iterator.next();
+        // Almura start
+        EntityPlayer entityplayer = getPlayer(player.getName().toLowerCase());
+        if (entityplayer != null) {
             entityplayer.playerConnection.disconnect("You logged in from another location");
         }
+        // Almura end
 
         /* CraftBukkit start
         Object object;
@@ -806,19 +812,7 @@ public abstract class PlayerList {
     }
 
     public EntityPlayer getPlayer(String s) {
-        Iterator iterator = this.players.iterator();
-
-        EntityPlayer entityplayer;
-
-        do {
-            if (!iterator.hasNext()) {
-                return null;
-            }
-
-            entityplayer = (EntityPlayer) iterator.next();
-        } while (!entityplayer.getName().equalsIgnoreCase(s));
-
-        return entityplayer;
+        return getPlayerByName(s); // Almura
     }
 
     public List a(ChunkCoordinates chunkcoordinates, int i, int j, int k, int l, int i1, int j1, Map map, String s, String s1, World world) {
