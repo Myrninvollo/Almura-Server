@@ -328,6 +328,13 @@ public final class CraftServer implements Server {
     public Player getPlayer(final String name) {
         Validate.notNull(name, "Name cannot be null");
 
+        // Almura start
+        Player directLookup = getPlayerExact(name);
+        if (directLookup != null) {
+            return directLookup;
+        }
+        // Almura end
+
         Player[] players = getOnlinePlayers();
 
         Player found = null;
@@ -349,15 +356,10 @@ public final class CraftServer implements Server {
     public Player getPlayerExact(String name) {
         Validate.notNull(name, "Name cannot be null");
 
-        String lname = name.toLowerCase();
-
-        for (Player player : getOnlinePlayers()) {
-            if (player.getName().equalsIgnoreCase(lname)) {
-                return player;
-            }
-        }
-
-        return null;
+        // Almura start
+        EntityPlayer entityPlayer = playerList.getPlayer(name);
+        return (entityPlayer != null) ? entityPlayer.getBukkitEntity() : null;
+        // Almura end
     }
 
     public int broadcastMessage(String message) {
