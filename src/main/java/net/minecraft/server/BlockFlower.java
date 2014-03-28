@@ -2,6 +2,13 @@ package net.minecraft.server;
 
 import java.util.Random;
 
+// Almura start
+import org.bukkit.Bukkit;
+
+import com.almuramc.event.block.CropPlantEvent;
+import com.almuramc.event.block.CropPopEvent;
+// Almura end
+
 public class BlockFlower extends Block {
 
     protected BlockFlower(int i, Material material) {
@@ -22,7 +29,15 @@ public class BlockFlower extends Block {
     }
 
     protected boolean g_(int i) {
-        return i == Block.GRASS.id || i == Block.DIRT.id || i == Block.SOIL.id;
+        // Almura start
+        CropPlantEvent event = new CropPlantEvent();
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        if (!event.isCustom()) {
+            return i == Block.GRASS.id || i == Block.DIRT.id || i == Block.SOIL.id;
+        } else {
+            return event.canPlant();
+        }
+        // Almura end
     }
 
     public void doPhysics(World world, int i, int j, int k, int l) {
@@ -36,8 +51,14 @@ public class BlockFlower extends Block {
 
     protected final void e(World world, int i, int j, int k) {
         if (!this.f(world, i, j, k)) {
-            this.c(world, i, j, k, world.getData(i, j, k), 0);
-            world.setTypeIdAndData(i, j, k, 0, 0, 2);
+            // Almura start
+            CropPopEvent event = new CropPopEvent(world.getWorld().getBlockAt(i,j,k));
+            Bukkit.getServer().getPluginManager().callEvent(event);
+            if (!event.isCancelled()) {
+                this.c(world, i, j, k, world.getData(i, j, k), 0);
+                world.setTypeIdAndData(i, j, k, 0, 0, 2);
+            }
+            // Almura end
         }
     }
 
