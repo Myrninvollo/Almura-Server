@@ -7,7 +7,6 @@
   <version>1.6.4-R2.1-SNAPSHOT</version>
   <build>
     <defaultGoal>clean package</defaultGoal>
-    <finalName>${project.name}</finalName>
     <pluginManagement>
       <plugins>
         <plugin>
@@ -200,8 +199,8 @@
             </goals>
             <configuration>
               <maps>${basedir}/target/maps.yml</maps>
-              <input>${basedir}/target/${project.name}.jar</input>
-              <original>${basedir}/target/unmapped-${project.name}.jar</original>
+              <input>${basedir}/target/${project.name}-${project.version}.jar</input>
+              <original>${basedir}/target/unmapped-${project.name}-${project.version}.jar</original>
             </configuration>
           </execution>
         </executions>

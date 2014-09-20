@@ -33,6 +33,12 @@ public class BlockSoil extends Block {
             int l = world.getData(i, j, k);
 
             if (l > 0) {
+             // Almura Start --> Prevent Rain Fade
+                org.bukkit.block.Block block = world.getWorld().getBlockAt(i, j, k);
+                if (CraftEventFactory.callBlockFadeEvent(block, Block.DIRT.id).isCancelled()) {
+                    return;
+                }
+                // CraftBukkit end
                 world.setData(i, j, k, l - 1, 2);
             } else if (!this.k(world, i, j, k)) {
                 // CraftBukkit start
