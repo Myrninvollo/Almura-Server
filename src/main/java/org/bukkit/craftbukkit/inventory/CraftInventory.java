@@ -249,7 +249,7 @@ public class CraftInventory implements Inventory {
         return firstPartial(material.getId());
     }
 
-    private int firstPartial(ItemStack item) {
+    public int firstPartial(ItemStack item) {
         ItemStack[] inventory = getContents();
         ItemStack filteredItem = CraftItemStack.asCraftCopy(item);
         if (item == null) {

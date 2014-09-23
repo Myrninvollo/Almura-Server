@@ -81,16 +81,22 @@ public final class CraftItemStack extends ItemStack {
 
     /**
      * Mirror
+     * @return 
      */
-    private CraftItemStack(net.minecraft.server.ItemStack item) {
+    public net.minecraft.server.ItemStack getHandle() {
+        return handle;
+    }
+    
+    
+    public CraftItemStack(net.minecraft.server.ItemStack item) {
         this.handle = item;
     }
 
-    private CraftItemStack(ItemStack item) {
+    public CraftItemStack(ItemStack item) {
         this(item.getTypeId(), item.getAmount(), item.getDurability(), item.hasItemMeta() ? item.getItemMeta() : null);
     }
 
-    private CraftItemStack(int typeId, int amount, short durability, ItemMeta itemMeta) {
+    public CraftItemStack(int typeId, int amount, short durability, ItemMeta itemMeta) {
         setTypeId(typeId);
         setAmount(amount);
         setDurability(durability);
