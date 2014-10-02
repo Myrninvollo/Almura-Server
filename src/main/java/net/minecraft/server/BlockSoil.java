@@ -32,7 +32,7 @@ public class BlockSoil extends Block {
     public void a(World world, int x, int y, int z, Random random) {
         // Almura Start -> Call Block's parent method as that fires the event
         super.a(world, x, y, z, random);
-        if (!this.m(world, x, y, z) && !world.isRainingAt(x, y + 1, z)) {  // isWaterNearby  // canLightningStrikeAt
+        if (!this.m(world, x, y, z) && !world.isRainingAt(x, y + 1, z) && !(world.getBiome(x, z).humidity > 0.4)) {  // isWaterNearby  // canLightningStrikeAt
             int moistureLevel = world.getData(x, y, z);
 
             if (moistureLevel > 0) {
