@@ -10,51 +10,53 @@ import org.bukkit.craftbukkit.event.CraftEventFactory;
 public class BlockSoil extends Block {
 
     protected BlockSoil(int i) {
-        super(i, Material.EARTH);
-        this.b(true);
-        this.a(0.0F, 0.0F, 0.0F, 1.0F, 0.9375F, 1.0F);
-        this.k(255);
+        super(i, Material.EARTH);        
+        this.b(true);  // setTickRandomly
+        this.a(0.0F, 0.0F, 0.0F, 1.0F, 0.9375F, 1.0F);  // setBlockBounds
+        this.k(255); // setLightOpacity
     }
 
     public AxisAlignedBB b(World world, int i, int j, int k) {
         return AxisAlignedBB.a().a((double) (i + 0), (double) (j + 0), (double) (k + 0), (double) (i + 1), (double) (j + 1), (double) (k + 1));
     }
 
-    public boolean c() {
+    public boolean c() { // isOpaqueCube
         return false;
     }
 
-    public boolean b() {
+    public boolean b() { // renderAsNormalBlock
         return false;
     }
 
-    public void a(World world, int i, int j, int k, Random random) {
-        if (!this.m(world, i, j, k) && !world.isRainingAt(i, j + 1, k)) {
-            int l = world.getData(i, j, k);
+    // updateTick()
+    public void a(World world, int x, int y, int z, Random random) {
+        if (!this.m(world, x, y, z) && !world.isRainingAt(x, y + 1, z)) {  // isWaterNearby  // canLightningStrikeAt
+            int moistureLevel = world.getData(x, y, z);
 
-            if (l > 0) {
+            if (moistureLevel > 0) {
              // Almura Start --> Prevent Rain Fade
-                org.bukkit.block.Block block = world.getWorld().getBlockAt(i, j, k);
+                org.bukkit.block.Block block = world.getWorld().getBlockAt(x, y, z);
                 if (CraftEventFactory.callBlockFadeEvent(block, Block.DIRT.id).isCancelled()) {
                     return;
                 }
                 // CraftBukkit end
-                world.setData(i, j, k, l - 1, 2);
-            } else if (!this.k(world, i, j, k)) {
+                world.setData(x, y, z, moistureLevel - 1, 2);
+            } else if (!this.k(world, x, y, z)) {
                 // CraftBukkit start
-                org.bukkit.block.Block block = world.getWorld().getBlockAt(i, j, k);
+                org.bukkit.block.Block block = world.getWorld().getBlockAt(x, y, z);
                 if (CraftEventFactory.callBlockFadeEvent(block, Block.DIRT.id).isCancelled()) {
                     return;
                 }
                 // CraftBukkit end
 
-                world.setTypeIdUpdate(i, j, k, Block.DIRT.id);
+                world.setTypeIdUpdate(x, y, z, Block.DIRT.id);
             }
         } else {
-            world.setData(i, j, k, 7, 2);
+            world.setData(x, y, z, 7, 2);
         }
     }
-
+    
+    // onFallenUpon
     public void a(World world, int i, int j, int k, Entity entity, float f) {
         if (!world.isStatic && world.random.nextFloat() < f - 0.5F) {
             if (!(entity instanceof EntityHuman) && !world.getGameRules().getBoolean("mobGriefing")) {
@@ -79,6 +81,7 @@ public class BlockSoil extends Block {
         }
     }
 
+    // isCropsNearby
     private boolean k(World world, int i, int j, int k) {
         byte b0 = 0;
 
@@ -95,6 +98,7 @@ public class BlockSoil extends Block {
         return false;
     }
 
+    // isWaterNearBy
     private boolean m(World world, int i, int j, int k) {
         for (int l = i - 4; l <= i + 4; ++l) {
             for (int i1 = j; i1 <= j + 1; ++i1) {
