@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.bukkit.craftbukkit.event.CraftEventFactory;
+
 import java.util.List;
 import java.util.Random;
 
@@ -332,7 +334,11 @@ public class Block {
         return true;
     }
 
-    public void a(World world, int i, int j, int k, Random random) {}
+    //Almura Start -> This is onTick
+    public void a(World world, int i, int j, int k, Random random) {
+        //TODO Best place for this?
+        CraftEventFactory.callBlockTickEvent(world, i, j, k, random);
+    }
 
     public void postBreak(World world, int i, int j, int k, int l) {}
 

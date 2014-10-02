@@ -4,7 +4,9 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
+import com.almuramc.event.block.BlockTickEvent;
 import net.minecraft.server.ChunkCoordinates;
 import net.minecraft.server.Container;
 import net.minecraft.server.DamageSource;
@@ -731,6 +733,15 @@ public class CraftEventFactory {
     public static PlayerLeashEntityEvent callPlayerLeashEntityEvent(EntityInsentient entity, Entity leashHolder, EntityHuman player) {
         PlayerLeashEntityEvent event = new PlayerLeashEntityEvent(entity.getBukkitEntity(), leashHolder.getBukkitEntity(), (Player) player.getBukkitEntity());
         entity.world.getServer().getPluginManager().callEvent(event);
+        return event;
+    }
+
+    //Almura Start -> Add BlockTickEvent callback
+    public static BlockTickEvent callBlockTickEvent(World world, int x, int y, int z, Random random) {
+        org.bukkit.World bukkitWorld = world.getWorld();
+        final Block bukkitBlock = bukkitWorld.getBlockAt(x, y, z);
+        final BlockTickEvent event = new BlockTickEvent(bukkitBlock, random);
+        world.getServer().getPluginManager().callEvent(event);
         return event;
     }
 }
