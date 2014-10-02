@@ -46,6 +46,8 @@ public class BlockFlower extends Block {
     }
 
     public void a(World world, int i, int j, int k, Random random) {
+        //Almura Start -> Call super to fire BlockTickEvent
+        super.a(world, i, j, k, random);
         this.e(world, i, j, k);
     }
 

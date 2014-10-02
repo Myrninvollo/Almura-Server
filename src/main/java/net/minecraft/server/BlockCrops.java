@@ -22,6 +22,7 @@ public class BlockCrops extends BlockFlower {
 
     public void a(World world, int i, int j, int k, Random random) {
         super.a(world, i, j, k, random);
+
         if (world.getLightLevel(i, j + 1, k) >= 9) {
             int l = world.getData(i, j, k);
 
