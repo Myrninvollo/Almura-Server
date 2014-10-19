@@ -27,7 +27,8 @@ import org.bukkit.event.world.WorldSaveEvent;
 
 public abstract class MinecraftServer implements ICommandListener, Runnable, IMojangStatistics {
 
-    private static MinecraftServer l;
+    //Almura Start - private -> public
+    public static MinecraftServer INSTANCE;
     public Convertable convertable; // CraftBukkit - private final -> public
     private final MojangStatisticsGenerator n = new MojangStatisticsGenerator("server", this, aq());
     public File universe; // CraftBukkit - private final -> public
@@ -103,7 +104,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
         this.i = new long[100];
         this.j = new long[100];
         this.Q = "";
-        l = this;
+        INSTANCE = this;
         // this.universe = file1; // CraftBukkit
         this.q = new CommandDispatcher();
         // this.convertable = new WorldLoaderServer(server.getWorldContainer()); // CraftBukkit - moved to DedicatedServer.init
@@ -911,7 +912,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
     }
 
     public static MinecraftServer getServer() {
-        return l;
+        return INSTANCE;
     }
 
     public String getName() {
