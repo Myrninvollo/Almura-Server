@@ -1582,10 +1582,8 @@ public class PlayerConnection extends Connection {
 
     public void a(Packet130UpdateSign packet130updatesign) {
         if (this.player.dead) return; // CraftBukkit
-
         this.player.u();
         WorldServer worldserver = this.minecraftServer.getWorldServer(this.player.dimension);
-
         if (worldserver.isLoaded(packet130updatesign.x, packet130updatesign.y, packet130updatesign.z)) {
             TileEntity tileentity = worldserver.getTileEntity(packet130updatesign.x, packet130updatesign.y, packet130updatesign.z);
 
@@ -1604,11 +1602,10 @@ public class PlayerConnection extends Connection {
 
             int i;
             int j;
-
             for (j = 0; j < 4; ++j) {
                 boolean flag = true;
 
-                if (packet130updatesign.lines[j].length() > 15) {
+                if (packet130updatesign.lines[j].length() > 30) {
                     flag = false;
                 } else {
                     for (i = 0; i < packet130updatesign.lines[j].length(); ++i) {
@@ -1619,10 +1616,9 @@ public class PlayerConnection extends Connection {
                 }
 
                 if (!flag) {
-                    packet130updatesign.lines[j] = "!?";
+                    packet130updatesign.lines[j] = "Invalid Chars";
                 }
             }
-
             if (tileentity instanceof TileEntitySign) {
                 j = packet130updatesign.x;
                 int k = packet130updatesign.y;
