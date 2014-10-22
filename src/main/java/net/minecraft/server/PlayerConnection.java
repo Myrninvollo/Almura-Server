@@ -1592,7 +1592,10 @@ public class PlayerConnection extends Connection {
             if (tileentity instanceof TileEntitySign) {
                 TileEntitySign tileentitysign = (TileEntitySign) tileentity;
 
-                if (!tileentitysign.a() || tileentitysign.b() != this.player) {
+                // Almura Server Change
+                //if (!tileentitysign.a() || tileentitysign.b() != this.player) {  b() can be null from time to time.
+
+                if (!tileentitysign.a()) {
                     this.minecraftServer.warning("Player " + this.player.getName() + " just tried to change non-editable sign");
                     this.sendPacket(new Packet130UpdateSign(packet130updatesign.x, packet130updatesign.y, packet130updatesign.z, tileentitysign.lines)); // CraftBukkit
                     return;
