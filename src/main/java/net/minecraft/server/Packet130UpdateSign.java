@@ -24,7 +24,6 @@ public class Packet130UpdateSign extends Packet {
     }
 
     public void a(DataInput datainput) throws IOException {
-        System.out.println("Reading Data from Packet 130");
         this.x = datainput.readInt();
         this.y = datainput.readShort();
         this.z = datainput.readInt();
